@@ -4,9 +4,14 @@ package com.angel.Educacion.Service.Aulas;
 
 import com.angel.Educacion.Dto.Aulas.AulaRequest;
 import com.angel.Educacion.Dto.Aulas.AulaResponse;
-import java.util.List;
-public interface AulaService {
+import com.angel.Educacion.Service.CrudService;
 
+import java.util.List;
+public interface AulaService extends CrudService<AulaRequest, AulaResponse> {
+
+    // extends CrudService<AulaRequest, AulaResponse>
+
+    /*
     List<AulaResponse> listar(
             String nombre, Integer capacidad
     );
@@ -14,5 +19,7 @@ public interface AulaService {
     AulaResponse registrar(AulaRequest request);
     AulaResponse actualizar(long id, AulaRequest request);
     void eliminar(long id);
+
+*/
 
 }// FIN DE LA INTERFACE

@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder
@@ -37,8 +35,23 @@ public class Inscripcion {
     @Column(name = "FECHA_INSCRIPCION", nullable = false)
     private LocalDate fechaInscripcion = LocalDate.now();
 
-
     @OneToOne(mappedBy = "inscripcion")
     private Calificacion calificacion;
+
+    public void actualizar(Alumnos alumno, Grupos grupo) {
+        validarDatos(alumno, grupo);
+
+        this.alumno = alumno;
+        this.grupo = grupo;
+    }
+
+    private void validarDatos(Alumnos alumno, Grupos grupo) {
+        if (alumno == null) {
+            throw new IllegalArgumentException("El alumno es requerido");
+        }
+        if (grupo == null) {
+            throw new IllegalArgumentException("El grupo es requerido");
+        }
+    }
 
 } // FIN DE LA CLASE INSCRIPCION

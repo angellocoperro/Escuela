@@ -30,19 +30,15 @@ public class Aula {
     @Column(name = "CAPACIDAD", nullable = false)
     private Integer capacidad;
 
-
     @Builder.Default
     @OneToMany(mappedBy = "aula")
     private List<Grupos> grupos = new ArrayList<>();
-
 
     public void actualizar(String nombre, Integer capacidad){
         validarDatos(nombre, capacidad);
         this.nombre = nombre;
         this.capacidad = capacidad;
-
     }
-
     private void validarDatos(String nombre, Integer capacidad){
         StringCustomUtils.validarTamanio(nombre, 5, 30,
                 "El nombre es requerido y debe tener en 5 y 30 caracteres");
@@ -54,20 +50,5 @@ public class Aula {
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 } // FIN DE LA CLASE AULA

@@ -4,9 +4,9 @@ import com.angel.Educacion.Dto.Alumnos.AlumnoRequest;
 import com.angel.Educacion.Dto.Alumnos.AlumnoResponse;
 import com.angel.Educacion.Entities.Alumnos;
 import com.angel.Educacion.Exceptions.EntidadRelacionadaException;
+import com.angel.Educacion.Exceptions.RecursoNoEncontradoException;
 import com.angel.Educacion.Mapper.AlumnoMapper;
 import com.angel.Educacion.Repository.AlumnoRepository;
-import com.angel.Educacion.Utils.ServiceUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     @Override
     @Transactional(readOnly = true)
     public AlumnoResponse obtenerPorId(Long id) {
-        return alumnoMapper.entidadAResponse(obtenerAlumno(id));
+        return alumnoMapper.entidadAResponse(obtenerPorIdOException(id));
     }
 
     @Override
@@ -70,14 +70,14 @@ public class AlumnoServiceImpl implements AlumnoService {
 
     @Override
     public AlumnoResponse actualizar(AlumnoRequest request, Long id) {
-        Alumnos alumno = obtenerAlumno(id);
+        Alumnos alumno = obtenerPorIdOException(id);
 
         log.info("Actualizando alumno con id {}", id);
 
-        boolean cambiaronDatosPersonales =
-                !alumno.getNombre().equalsIgnoreCase(request.nombre().trim())
-                        || !alumno.getApellidoPaterno().equalsIgnoreCase(request.apellidoPaterno().trim())
-                        || !alumno.getApellidoMaterno().equalsIgnoreCase(request.apellidoMaterno().trim());
+        boolean cambiaronDatosPersonales = alumno.cambioEnDatos(
+                request.nombre().trim(),
+                request.apellidoPaterno().trim(),
+                request.apellidoMaterno().trim());
 
         String matricula = alumno.getMatricula();
         String email = alumno.getEmail();
@@ -85,7 +85,6 @@ public class AlumnoServiceImpl implements AlumnoService {
         if (cambiaronDatosPersonales) {
 
             log.info("Los datos personales cambiaron, regenerando matricula y email...");
-
 
             matricula = alumnoRepository.generarMatricula(
                     request.nombre(), request.apellidoPaterno(), request.apellidoMaterno());
@@ -109,7 +108,7 @@ public class AlumnoServiceImpl implements AlumnoService {
 
     @Override
     public void eliminar(Long id) {
-        Alumnos alumno = obtenerAlumno(id);
+        Alumnos alumno = obtenerPorIdOException(id);
 
         log.info("Eliminando alumno con id: {}", id);
 
@@ -123,8 +122,10 @@ public class AlumnoServiceImpl implements AlumnoService {
         log.info("Alumno con id {} eliminado", id);
     }
 
-    private Alumnos obtenerAlumno(Long id) {
-        return ServiceUtils.obtenerEntidadOException(alumnoRepository, id, Alumnos.class);
+    private Alumnos obtenerPorIdOException(Long id) {
+        log.info("Obteniendo alumno por id: {}", id);
+        return alumnoRepository.findById(id).orElseThrow(
+                () -> new RecursoNoEncontradoException("Alumno no encontrado por id: " + id));
     }
 
 } // FIN DE LA CLASE ALUMNOSERVICEIMPL

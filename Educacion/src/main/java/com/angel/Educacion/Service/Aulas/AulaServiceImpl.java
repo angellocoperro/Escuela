@@ -4,9 +4,12 @@ import com.angel.Educacion.Dto.Aulas.AulaRequest;
 import com.angel.Educacion.Dto.Aulas.AulaResponse;
 import com.angel.Educacion.Entities.Aula;
 import com.angel.Educacion.Entities.Curso;
+import com.angel.Educacion.Exceptions.EntidadRelacionadaException;
 import com.angel.Educacion.Exceptions.RecursoNoEncontradoException;
 import com.angel.Educacion.Mapper.AulaMapper;
 import com.angel.Educacion.Repository.AulaRepository;
+import com.angel.Educacion.Utils.ServiceUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +27,75 @@ public class AulaServiceImpl implements AulaService{
     private AulaRepository aularepository;
     private AulaMapper aulaMapper;
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<AulaResponse> listar() {
+        log.info("Listando todas la aulas...");
+
+        return aularepository.findAll().stream()
+                .map(aulaMapper::entidadAResponse).toList();
+    }
+
+    @Override
+    public AulaResponse obtenerPorId(Long id) {
+        return aulaMapper.entidadAResponse(obtenerAula(id));
+    }
+
+    @Override
+    public AulaResponse registrar(AulaRequest request) {
+        log.info("Registrando nuevo maestro...");
+
+        Aula aulas = aulaMapper.requestAEntidad(request);
+
+        aularepository.save(aulas);
+
+        log.info("Nueva aula {} registrado ", aulas.getNombre());
+
+        return aulaMapper.entidadAResponse(aulas);
+    }
+
+    @Override
+    public AulaResponse actualizar(AulaRequest request, Long id) {
+        Aula  aulas = obtenerporIdOException(id);
+        log.info("Actualizando aula con id {}", id);
+
+        aulas.actualizar(
+                request.nombre(),
+                request.capacidad()
+        );
+        aularepository.save(aulas);
+
+        log.info("Aula {} actizada correctamente", aulas.getId());
+
+        return aulaMapper.entidadAResponse(aulas);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        log.info("Eliminando Aula con id: {} ", id);
+
+        Aula aula = obtenerporIdOException(id);
+
+        aularepository.delete(aula);
+
+        log.info("Aula por Id: {} eliminado", id);
+
+    }
+
+    private Aula obtenerAula(Long id) {
+        return ServiceUtils.obtenerEntidadOException(aularepository, id, Aula.class);
+    }
+
+    private Aula obtenerporIdOException(long id){
+        log.info("Obteniendo Aula por id: {}", id);
+        return aularepository.findById(id).orElseThrow(
+                () -> new RecursoNoEncontradoException("Aula no encontrado por id: " +id)
+        );
+    }
+
+
+
+    /*
     @Override
     @Transactional(readOnly = true)
     public List<AulaResponse> listar(String nombre, Integer capacidad) {
@@ -97,6 +169,7 @@ public class AulaServiceImpl implements AulaService{
                 .and(conCapacidad(capacidad));
     }
 
+    */
 
 
 }// FIN DE LA CLASE SERVICE

@@ -38,10 +38,10 @@ public class MaestroMapper implements CommonMapper<MaestroRequest, MaestroRespon
 
         return new MaestroResponse(
           entidad.getId(),
-          String.join("",
+          String.join(" ",
                   entidad.getNombre(),
                   entidad.getApellidoPaterno(),
-                  entidad.getApellidoPaterno()),
+                  entidad.getApellidoMaterno()),
           entidad.getEmail(),
           entidad.getTelefono(),
           cursos

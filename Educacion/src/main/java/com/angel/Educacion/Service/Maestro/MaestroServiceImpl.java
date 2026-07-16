@@ -78,7 +78,7 @@ public class MaestroServiceImpl implements MaestrosService {
                 request.telefono()
         );
 
-        log.info("Maestro {} actualizando correctamente ", maestro.getId());
+        log.info("Maestro {} actualizado correctamente ", maestro.getId());
 
         return maestroMapper.entidadAResponse(maestro);
 

@@ -5,4 +5,6 @@ import com.angel.Educacion.Dto.Alumnos.AlumnoResponse;
 import com.angel.Educacion.Service.CrudService;
 
 public interface AlumnoService extends CrudService<AlumnoRequest, AlumnoResponse> {
+
+
 }
