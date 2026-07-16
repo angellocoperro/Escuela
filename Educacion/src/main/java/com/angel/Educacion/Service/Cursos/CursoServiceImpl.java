@@ -1,11 +1,13 @@
 package com.angel.Educacion.Service.Cursos;
 
+import com.angel.Educacion.Exceptions.EntidadRelacionadaException;
 import com.angel.Educacion.Exceptions.RecursoNoEncontradoException;
 import com.angel.Educacion.Dto.Cursos.CursoRequest;
 import com.angel.Educacion.Dto.Cursos.CursoResponse;
 import com.angel.Educacion.Entities.Curso;
 import com.angel.Educacion.Mapper.CursoMapper;
 import com.angel.Educacion.Repository.CursoRepository;
+import com.angel.Educacion.Repository.GruposRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,6 +24,7 @@ public class CursoServiceImpl implements CursoService {
 
     private final CursoRepository cursoRepository;
     private final CursoMapper cursoMapper;
+    private GruposRepository gruposRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,6 +82,11 @@ public class CursoServiceImpl implements CursoService {
     public void eliminar(long id) {
         log.info("Eliminando Curso con id: {} ", id);
         Curso curso = obtenerPorIdOException(id);
+
+        if(gruposRepository.existsByCursoId(id)){
+            throw new EntidadRelacionadaException("No se puede eliminar el Curso que ya tiene grupos asignados");
+        }
+
         cursoRepository.delete(curso);
         log.info("Curso por Id: {} eliminado", id);
     }

@@ -8,6 +8,7 @@ import com.angel.Educacion.Exceptions.EntidadRelacionadaException;
 import com.angel.Educacion.Exceptions.RecursoNoEncontradoException;
 import com.angel.Educacion.Mapper.AulaMapper;
 import com.angel.Educacion.Repository.AulaRepository;
+import com.angel.Educacion.Repository.GruposRepository;
 import com.angel.Educacion.Utils.ServiceUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class AulaServiceImpl implements AulaService{
 
     private AulaRepository aularepository;
     private AulaMapper aulaMapper;
+    private GruposRepository gruposRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -80,6 +82,9 @@ public class AulaServiceImpl implements AulaService{
 
         Aula aula = obtenerporIdOException(id);
 
+        if(gruposRepository.existsByAulaId(id)){
+            throw new EntidadRelacionadaException("No se puede eliminar el Aula que ya tiene grupos asignados");
+        }
         aularepository.delete(aula);
 
         log.info("Aula por Id: {} eliminado", id);

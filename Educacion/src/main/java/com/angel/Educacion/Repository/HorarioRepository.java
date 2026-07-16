@@ -25,11 +25,13 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
             SELECT h FROM Horario h
             WHERE h.grupo.aula.id = :idAula
             AND h.diaSemana = :dia
+            AND h.grupo.periodo = :periodo
             AND (:idExcluir IS NULL OR h.id <> :idExcluir)
             """)
     List<Horario> buscarPorAulaYDia(
             @Param("idAula") Long idAula,
             @Param("dia") DiaSemana dia,
+            @Param("periodo") String periodo,
             @Param("idExcluir") Long idExcluir);
 
 } // FIN DE LA INTERFACE HORARIOREPOSITORY

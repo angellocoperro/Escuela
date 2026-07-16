@@ -91,7 +91,7 @@ public class MaestroServiceImpl implements MaestrosService {
 
         log.info("Eliminando maestro con id: {}", id);
 
-        if(gruposRepository.existsById(id)) {
+        if(gruposRepository.existsByMaestroId(id)) {
             throw new EntidadRelacionadaException("No se puede eliminar el maestro que ya tiene grupos asignados");
         }
 

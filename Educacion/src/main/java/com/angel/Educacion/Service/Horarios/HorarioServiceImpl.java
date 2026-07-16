@@ -129,7 +129,8 @@ public class HorarioServiceImpl implements HorarioService {
         LocalTime finNuevo = LocalTime.parse(horaFin);
 
         List<Horario> horariosGrupo = horarioRepository.buscarPorGrupoYDia(grupo.getId(), dia, idExcluir);
-        List<Horario> horariosAula = horarioRepository.buscarPorAulaYDia(grupo.getAula().getId(), dia, idExcluir);
+        List<Horario> horariosAula = horarioRepository.buscarPorAulaYDia(
+                grupo.getAula().getId(), dia, grupo.getPeriodo(), idExcluir);
 
         Stream.concat(horariosGrupo.stream(), horariosAula.stream())
                 .forEach(existente -> {
