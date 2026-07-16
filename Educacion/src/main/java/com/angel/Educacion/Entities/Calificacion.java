@@ -39,6 +39,13 @@ public class Calificacion {
         this.calificacion = calificacion;
     }
 
+    public void reasignarInscripcion(Inscripcion inscripcion) {
+        if (inscripcion == null) {
+            throw new IllegalArgumentException("La inscripcion es requerida");
+        }
+        this.inscripcion = inscripcion;
+    }
+
     private void validarCalificacion(BigDecimal calificacion) {
         if (calificacion == null) {
             throw new IllegalArgumentException("La calificacion es requerida");

@@ -45,21 +45,15 @@ public class AlumnoServiceImpl implements AlumnoService {
 
         log.info("Registrando nuevo alumno...");
 
-        Alumnos borrador = alumnoMapper.requestAEntidad(request);
+        Alumnos alumno = alumnoMapper.requestAEntidad(request);
 
         String matricula = alumnoRepository.generarMatricula(
-                borrador.getNombre(), borrador.getApellidoPaterno(), borrador.getApellidoMaterno());
+                alumno.getNombre(), alumno.getApellidoPaterno(), alumno.getApellidoMaterno());
 
         String email = alumnoRepository.generarEmail(
-                borrador.getNombre(), borrador.getApellidoPaterno(), borrador.getApellidoMaterno());
+                alumno.getNombre(), alumno.getApellidoPaterno(), alumno.getApellidoMaterno());
 
-        Alumnos alumno = Alumnos.builder()
-                .nombre(borrador.getNombre())
-                .apellidoPaterno(borrador.getApellidoPaterno())
-                .apellidoMaterno(borrador.getApellidoMaterno())
-                .matricula(matricula)
-                .email(email)
-                .build();
+        alumno.asignarDatosAcademicos(email, matricula);
 
         alumnoRepository.save(alumno);
 

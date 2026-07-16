@@ -49,6 +49,8 @@ public class CursoServiceImpl implements CursoService {
     public CursoResponse registrar(CursoRequest request) {
         log.info("Registrando un nuevo Curso...");
 
+        validarNombreUnico(request.nombre(), null);
+
         Curso curso = cursoMapper.requestAEntidad(request);
         cursoRepository.save(curso);
         log.info("Nuevo Curso '{}' registrado con id {}",  curso.getNombre(), curso.getId());
@@ -60,6 +62,8 @@ public class CursoServiceImpl implements CursoService {
     public CursoResponse actualizar(long id, CursoRequest request) {
         log.info("Actualizando un nuevo Curso con id: {}", id);
         Curso curso = obtenerPorIdOException(id);
+
+        validarNombreUnico(request.nombre(), id);
 
         curso.actualizar(
                 request.nombre(),
@@ -83,6 +87,20 @@ public class CursoServiceImpl implements CursoService {
         log.info("Obteniendo Curso por id: {}", id);
         return cursoRepository.findById(id).orElseThrow(
                 () -> new RecursoNoEncontradoException("Curso no encontrado por id: " +id));
+    }
+
+    private void validarNombreUnico(String nombre, Long idExcluir) {
+
+        log.info("Validando que el nombre del curso sea único...");
+
+        boolean existe = (idExcluir == null)
+                ? cursoRepository.existsByNombreIgnoreCase(nombre.trim())
+                : cursoRepository.existsByNombreIgnoreCaseAndIdNot(nombre.trim(), idExcluir);
+
+        if (existe) {
+            throw new IllegalArgumentException(
+                    "Ya existe un curso registrado con el nombre: " + nombre);
+        }
     }
 
     private Specification<Curso> conNombre(String nombre){

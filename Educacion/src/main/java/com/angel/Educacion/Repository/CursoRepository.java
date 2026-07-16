@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface CursoRepository extends JpaRepository<Curso, Long>,
         JpaSpecificationExecutor<Curso> {
 
+    boolean existsByNombreIgnoreCase(String nombre);
 
-
+    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
 
 } // FIN DE LA INTERFACE CURSOREPOSITORY

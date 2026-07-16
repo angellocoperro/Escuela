@@ -51,18 +51,11 @@ public class HorarioServiceImpl implements HorarioService {
 
         log.info("Registrando nuevo horario...");
 
-        Grupos grupo = obtenerGrupoOException(request.idGrupo());
-        DiaSemana dia = DiaSemana.obtenerDiaSemanaPorDescripcion(request.dia());
+        Horario horario = horarioMapper.requestAEntidad(request);
 
-        validarCoherenciaHoras(request.horaInicio(), request.horaFin());
-        validarSinTraslape(grupo, dia, request.horaInicio(), request.horaFin(), null);
-
-        Horario horario = Horario.builder()
-                .grupo(grupo)
-                .diaSemana(dia)
-                .horaInicio(request.horaInicio().trim())
-                .horaFin(request.horaFin().trim())
-                .build();
+        validarCoherenciaHoras(horario.getHoraInicio(), horario.getHoraFin());
+        validarSinTraslape(horario.getGrupo(), horario.getDiaSemana(),
+                horario.getHoraInicio(), horario.getHoraFin(), null);
 
         horarioRepository.save(horario);
 

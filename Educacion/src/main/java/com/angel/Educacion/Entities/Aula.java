@@ -24,7 +24,7 @@ public class Aula {
     @Column(name = "ID_AULA")
     private Long id;
 
-    @Column(name = "NOMBRE", nullable = false, length = 30)
+    @Column(name = "NOMBRE", nullable = false, length = 30, unique = true)
     private String nombre;
 
     @Column(name = "CAPACIDAD", nullable = false)

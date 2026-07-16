@@ -8,5 +8,8 @@ public interface AulaRepository  extends JpaRepository<Aula, Long>,
         JpaSpecificationExecutor<Aula>
 {
 
+    boolean existsByNombreIgnoreCase(String nombre);
+
+    boolean existsByNombreIgnoreCaseAndIdNot(String nombre, Long id);
 
 } // FIN DE LA CLASE AULAREPOSITORY

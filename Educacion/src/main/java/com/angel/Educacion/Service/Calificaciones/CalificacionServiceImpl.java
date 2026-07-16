@@ -72,11 +72,7 @@ public class CalificacionServiceImpl implements CalificacionService {
 
             Inscripcion inscripcion = obtenerInscripcionOException(request.idInscripcion());
 
-            calificacion = Calificacion.builder()
-                    .id(calificacion.getId())
-                    .inscripcion(inscripcion)
-                    .fechaRegistro(calificacion.getFechaRegistro())
-                    .build();
+            calificacion.reasignarInscripcion(inscripcion);
         }
 
         calificacion.actualizar(request.calificacion());

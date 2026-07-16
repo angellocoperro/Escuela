@@ -43,7 +43,9 @@ public class AulaServiceImpl implements AulaService{
 
     @Override
     public AulaResponse registrar(AulaRequest request) {
-        log.info("Registrando nuevo maestro...");
+        log.info("Registrando nueva Aula...");
+
+        validarNombreUnico(request.nombre(), null);
 
         Aula aulas = aulaMapper.requestAEntidad(request);
 
@@ -58,6 +60,8 @@ public class AulaServiceImpl implements AulaService{
     public AulaResponse actualizar(AulaRequest request, Long id) {
         Aula  aulas = obtenerporIdOException(id);
         log.info("Actualizando aula con id {}", id);
+
+        validarNombreUnico(request.nombre(), id);
 
         aulas.actualizar(
                 request.nombre(),
@@ -91,6 +95,20 @@ public class AulaServiceImpl implements AulaService{
         return aularepository.findById(id).orElseThrow(
                 () -> new RecursoNoEncontradoException("Aula no encontrado por id: " +id)
         );
+    }
+
+    private void validarNombreUnico(String nombre, Long idExcluir) {
+
+        log.info("Validando que el nombre del aula sea único...");
+
+        boolean existe = (idExcluir == null)
+                ? aularepository.existsByNombreIgnoreCase(nombre.trim())
+                : aularepository.existsByNombreIgnoreCaseAndIdNot(nombre.trim(), idExcluir);
+
+        if (existe) {
+            throw new IllegalArgumentException(
+                    "Ya existe un aula registrada con el nombre: " + nombre);
+        }
     }
 
 
