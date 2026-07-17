@@ -58,8 +58,9 @@ public class Curso {
         if(nombre == null){
             throw new IllegalArgumentException("El nombre es requerido");
         }
-        if(descripcion == null){
-            throw new IllegalArgumentException("La descripcion es requerida");
+        if (descripcion != null) {
+            StringCustomUtils.validarTamanio(descripcion, 10, 200,
+                    "La descripcion, si se proporciona, debe tener entre 10 y 200 caracteres");
         }
         if(creditos == null){
             throw new IllegalArgumentException("Los creditos son requeridos");

@@ -10,8 +10,8 @@ public record CursoRequest(
         @Size(min = 5, max = 100, message =  "El nombre es requerido y debe tener en 5 y 100 caracteres")
         String nombre,
 
-        @NotBlank(message = "La descripcion es requerida")
-        @Size(min = 10, max = 200, message =  "La descripcion es requerido y debe tener en 10 y 200 caracteres")
+        //@NotBlank(message = "La descripcion es requerida")
+        @Size(min = 10, max = 200, message =  "La descripcion, si se proporciona, debe tener entre 10 y 200 caracteres")
         String descripcion,
 
         @NotNull(message = "Los creditos son requeridos")
